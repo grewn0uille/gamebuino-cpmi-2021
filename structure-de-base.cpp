@@ -9,5 +9,5 @@ void loop() {
 
   gb.display.clear();
 
-  gb.display.print("hello, world");
+  gb.display.print("hello, world\nbonjour, monde\nhola, mundo");
 }
