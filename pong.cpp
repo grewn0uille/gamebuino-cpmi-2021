@@ -52,6 +52,18 @@ void loop() {
     balle_posY = 20;
     balle_speedX = 1;
     balle_speedY = 1;
+  }
+
+  if ((balle_posX == raquette1_posX + raquette_largeur)
+      && (balle_posY + balle_taille >= raquette1_posY)
+      && (balle_posY <= raquette1_posY + raquette_hauteur)){
+    balle_speedX = 1;
+  }
+  if ((balle_posX == raquette2_posX - raquette_largeur)
+      && (balle_posY + balle_taille >= raquette2_posY)
+      && (balle_posY <= raquette2_posY + raquette_hauteur)){
+    balle_speedX = -1;
+  }
 
   gb.display.fillRect(balle_posX, balle_posY, balle_taille, balle_taille);
   gb.display.fillRect(raquette1_posX, raquette1_posY, raquette_largeur, raquette_hauteur);
