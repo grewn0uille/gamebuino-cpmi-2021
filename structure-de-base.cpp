@@ -9,7 +9,9 @@ void loop() {
 
   gb.display.clear();
 
-  gb.display.setColor(RED);
+  gb.display.setColor(RED, YELLOW);
+
+  gb.display.setFontSize(2);
 
   gb.display.print("hello, world\nbonjour, monde\nhola, mundo");
 }
