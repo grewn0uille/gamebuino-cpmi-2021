@@ -80,7 +80,7 @@ void loop() {
     balle_speedX = 1;
   }
   // Si la balle tape contre le bord gauche de la raquette de droite, on la renvoie vers la gauche
-  if ((balle_posX == raquette2_posX - raquette_largeur)
+  if ((balle_posX + balle_taille == raquette2_posX)
       && (balle_posY + balle_taille >= raquette2_posY)
       && (balle_posY <= raquette2_posY + raquette_hauteur)){
     balle_speedX = -1;
