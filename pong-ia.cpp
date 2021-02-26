@@ -40,10 +40,14 @@ void loop() {
 
   // Si la balle est au dessus du centre de la raquette, la raquette va vers le bas
   if (balle_posY > raquette2_posY + raquette_hauteur / 2 && random(0, 2) == 1){
-    raquette2_posY = raquette2_posY + 2;
+    if (raquette2_posY + raquette_hauteur + 2 <= gb.display.height()){
+      raquette2_posY = raquette2_posY + 2;
+    }
   } else if (balle_posY > raquette2_posY + raquette_hauteur / 2 && random(0, 2) == 1){
     // Sinon, elle va vers le haut
-    raquette2_posY = raquette2_posY - 2;
+    if (raquette2_posY > 0){
+      raquette2_posY = raquette2_posY - 2;
+    }
   }
 
   // Si la balle touche le haut de l’écran, on la fait aller vers le bas
