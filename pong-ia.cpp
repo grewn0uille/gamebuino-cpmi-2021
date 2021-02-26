@@ -31,19 +31,19 @@ void loop() {
 
   // Si on reste appuyé vers le haut, la raquette monte
   if (gb.buttons.repeat(BUTTON_UP, 0)){
-    raquette1_posY = raquette1_posY - 1;
+    raquette1_posY = raquette1_posY - 2;
   }
   // Si on reste appuyé vers le bas, la raquette descend
   if (gb.buttons.repeat(BUTTON_DOWN, 0)){
-    raquette1_posY = raquette1_posY + 1;
+    raquette1_posY = raquette1_posY + 2;
   }
 
   // Si la balle est au dessus du centre de la raquette, la raquette va vers le bas
-  if (balle_posY > raquette2_posY + raquette_hauteur / 2){
-    raquette2_posY = raquette2_posY + 1;
-  } else {
+  if (balle_posY > raquette2_posY + raquette_hauteur / 2 && random(0, 2) == 1){
+    raquette2_posY = raquette2_posY + 2;
+  } else if (balle_posY > raquette2_posY + raquette_hauteur / 2 && random(0, 2) == 1){
     // Sinon, elle va vers le haut
-    raquette2_posY = raquette2_posY - 1;
+    raquette2_posY = raquette2_posY - 2;
   }
 
   // Si la balle touche le haut de l’écran, on la fait aller vers le bas
