@@ -20,17 +20,13 @@ int raquette2_posY = 30;
 int score1 = 0;
 int score2 = 0;
 
-void setup() {
-  gb.begin();
-}
-
-void loop() {
-  while (!gb.update());
-  gb.display.clear();
-
+// Nos fonctions
+void mise_a_jour_position_balle(){
   balle_posX = balle_posX + balle_speedX;
   balle_posY = balle_posY + balle_speedY;
+}
 
+void deplacement_raquettes(){
   // Si on reste appuyé vers le haut, la raquette monte
   if (gb.buttons.repeat(BUTTON_UP, 0)){
     raquette1_posY = raquette1_posY - 1;
@@ -48,7 +44,9 @@ void loop() {
   if (gb.buttons.repeat(BUTTON_A, 0)){
     raquette2_posY = raquette2_posY + 1;
   }
+}
 
+void rebond_balle_haut_bas(){
   // Si la balle touche le haut de l’écran, on la fait aller vers le bas
   if (balle_posY < 0){
     balle_speedY = 1;
@@ -57,7 +55,24 @@ void loop() {
   if (balle_posY > gb.display.height() - balle_taille){
     balle_speedY = -1;
   }
+}
 
+void rebond_balle_raquettes(){
+  // Si la balle tape contre le bord droit de la raquette de gauche, on la renvoie vers la droite
+  if ((balle_posX == raquette1_posX + raquette_largeur)
+      && (balle_posY + balle_taille >= raquette1_posY)
+      && (balle_posY <= raquette1_posY + raquette_hauteur)){
+    balle_speedX = 1;
+  }
+  // Si la balle tape contre le bord gauche de la raquette de droite, on la renvoie vers la gauche
+  if ((balle_posX + balle_taille == raquette2_posX)
+      && (balle_posY + balle_taille >= raquette2_posY)
+      && (balle_posY <= raquette2_posY + raquette_hauteur)){
+    balle_speedX = -1;
+  }
+}
+
+void sortie_balle_gauche_droite(){
   // Si la balle sort à droite ou à gauche de l’écran
   if ((balle_posX < 0) || (balle_posX > gb.display.width())){
     // Si elle sort à gauche, le joueur 2 gagne un point
@@ -74,20 +89,9 @@ void loop() {
     balle_speedX = 1;
     balle_speedY = 1;
   }
+}
 
-  // Si la balle tape contre le bord droit de la raquette de gauche, on la renvoie vers la droite
-  if ((balle_posX == raquette1_posX + raquette_largeur)
-      && (balle_posY + balle_taille >= raquette1_posY)
-      && (balle_posY <= raquette1_posY + raquette_hauteur)){
-    balle_speedX = 1;
-  }
-  // Si la balle tape contre le bord gauche de la raquette de droite, on la renvoie vers la gauche
-  if ((balle_posX + balle_taille == raquette2_posX)
-      && (balle_posY + balle_taille >= raquette2_posY)
-      && (balle_posY <= raquette2_posY + raquette_hauteur)){
-    balle_speedX = -1;
-  }
-
+void affichage(){
   // On affiche les score en haut de l’écran
   gb.display.setCursor(35, 5);
   gb.display.print(score1);
@@ -98,4 +102,25 @@ void loop() {
   gb.display.fillRect(balle_posX, balle_posY, balle_taille, balle_taille);
   gb.display.fillRect(raquette1_posX, raquette1_posY, raquette_largeur, raquette_hauteur);
   gb.display.fillRect(raquette2_posX, raquette2_posY, raquette_largeur, raquette_hauteur);
+}
+
+void setup() {
+  gb.begin();
+}
+
+void loop() {
+  while (!gb.update());
+  gb.display.clear();
+
+  mise_a_jour_position_balle();
+
+  deplacement_raquettes();
+
+  rebond_balle_haut_bas();
+
+  rebond_balle_raquettes();
+
+  sortie_balle_gauche_droite();
+
+  affichage();
 }
