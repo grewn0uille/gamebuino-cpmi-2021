@@ -1,19 +1,21 @@
 #include <Gamebuino-Meta.h>
 
+// On définit les constantes
+const int raquette_hauteur = 12;
+const int raquette_largeur = 3;
+const int raquette1_posX = 10;
+const int raquette2_posX = 65;
+const int balle_taille = 4;
+
+// On définit les variables
 int balle_posX = 20;
 int balle_posY = 20;
 int balle_speedX = 1;
 int balle_speedY = 1;
-int balle_taille = 4;
 
-int raquette1_posX = 10;
 int raquette1_posY = 30;
 
-int raquette2_posX = 65;
 int raquette2_posY = 30;
-
-int raquette_hauteur = 12;
-int raquette_largeur = 3;
 
 int score1 = 0;
 int score2 = 0;
