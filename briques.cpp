@@ -18,21 +18,13 @@ void loop() {
   gb.display.clear();
 
   // On initialise la ligne. Un 1 indique que la brique est visible
-  ligne_briques[0] = 1;
-  ligne_briques[1] = 1;
-  ligne_briques[2] = 1;
-  ligne_briques[3] = 1;
+  for(int i = 0; i < nombre_briques; i++){
+    ligne_briques[i] = 1;
+  }
 
   // Pour chaque brique, on calcule sa position en X et on l’affiche
-  int position_x_brique1 = 0;
-  gb.display.fillRect(position_x_brique1, position_y_ligne, largeur_brique, hauteur_brique);
-
-  int position_x_brique2 = largeur_brique + 2;
-  gb.display.fillRect(position_x_brique2, position_y_ligne, largeur_brique, hauteur_brique);
-
-  int position_x_brique3 = 2 * (largeur_brique + 2);
-  gb.display.fillRect(position_x_brique3, position_y_ligne, largeur_brique, hauteur_brique);
-
-  int position_x_brique4 = 3 * (largeur_brique + 2);
-  gb.display.fillRect(position_x_brique4, position_y_ligne, largeur_brique, hauteur_brique);
+  for(int i = 0; i < nombre_briques; i++){
+    int position_x_brique = i * (largeur_brique + 2);
+    gb.display.fillRect(position_x_brique, position_y_ligne, largeur_brique, hauteur_brique);
+  }
 }
