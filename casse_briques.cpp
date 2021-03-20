@@ -17,8 +17,8 @@ int raquette_posX = gb.display.width() / 3;
 const int nombre_briques = 8;
 const int largeur_brique = (gb.display.width() / nombre_briques) - 2;
 const int hauteur_brique = 3;
-const int position_y_ligne = 20;
-int ligne_briques[nombre_briques];
+const int nombre_lignes = 5;
+int ligne_briques[nombre_lignes][nombre_briques];
 
 // Nos fonctions
 void mise_a_jour_position_balle(){
@@ -29,11 +29,11 @@ void mise_a_jour_position_balle(){
 void deplacement_raquette(){
   // Si on reste appuyé vers le haut, la raquette monte
   if (gb.buttons.repeat(BUTTON_LEFT, 0)){
-    raquette_posX = raquette_posX - 1;
+    raquette_posX = raquette_posX - 2;
   }
   // Si on reste appuyé vers le bas, la raquette descend
   if (gb.buttons.repeat(BUTTON_RIGHT, 0)){
-    raquette_posX = raquette_posX + 1;
+    raquette_posX = raquette_posX + 2;
   }
 }
 
@@ -59,17 +59,20 @@ void rebond_balle_raquette(){
 }
 
 void rebond_balle_briques(){
-  for(int i = 0; i < nombre_briques; i++){
-    // On calcule la position X de la brique
-    int position_x_brique = i * (largeur_brique + 2);
-    if (ligne_briques[i] == 1){
-      // Si la balle touche une brique, on met la brique à 0 et on change la direction Y de la balle
-      if (gb.collide.rectRect(balle_posX, balle_posY, taille_balle, taille_balle, position_x_brique, position_y_ligne, largeur_brique, hauteur_brique)){
-        ligne_briques[i] = 0;
-        // On met - balle_speedY
-        // comme ça si on touche la brique en descente, la balle repart vers le haut
-        // si on touche la brique en montant, la balle repart vers le bas
-        balle_speedY = -balle_speedY;
+  for(int i = 0; i < nombre_lignes; i++){
+    for(int j = 0; j < nombre_briques; j++){
+      // On calcule la position X de la brique
+      int position_x_brique = j * (largeur_brique + 2);
+      int position_y_brique = i * (hauteur_brique + 2);
+      if (ligne_briques[i][j] == 1){
+        // Si la balle touche une brique, on met la brique à 0 et on change la direction Y de la balle
+        if (gb.collide.rectRect(balle_posX, balle_posY, taille_balle, taille_balle, position_x_brique, position_y_brique, largeur_brique, hauteur_brique)){
+          ligne_briques[i][j] = 0;
+          // On met - balle_speedY
+          // comme ça si on touche la brique en descente, la balle repart vers le haut
+          // si on touche la brique en montant, la balle repart vers le bas
+          balle_speedY = -balle_speedY;
+        }
       }
     }
   }
@@ -90,23 +93,45 @@ void sortie_balle(){
 }
 
 void init_briques(){
-  for(int i = 0; i < nombre_briques; i++){
-    ligne_briques[i] = 1;
+  for(int i = 0; i < nombre_lignes; i++){
+    for(int j = 0; j < nombre_briques; j++){
+      ligne_briques[i][j] = 1;
+    }
   }
 }
 
 void affichage(){
-  // On affiche la balle et la raquette
-  gb.display.fillRect(balle_posX, balle_posY, taille_balle, taille_balle);
-  gb.display.fillRect(raquette_posX, raquette_posY, largeur_raquette, hauteur_raquette);
-
   // On affiche les briques
-  for(int i = 0; i < nombre_briques; i++){
-    int position_x_brique = i * (largeur_brique + 2);
-    // On affiche que les briques que l’on n’a pas touché. 1 = brique intacte, 0 = brique touchée
-    if (ligne_briques[i] == 1){
-      gb.display.fillRect(position_x_brique, position_y_ligne, largeur_brique, hauteur_brique);
+  int il_y_a_encore_des_briques = false;
+  for(int i = 0; i < nombre_lignes; i++){
+    for(int j = 0; j < nombre_briques; j++){
+      int position_x_brique = j * (largeur_brique + 2);
+      int position_y_brique = i * (hauteur_brique + 2);
+      // On affiche que les briques que l’on n’a pas touché. 1 = brique intacte, 0 = brique touchée
+      if (ligne_briques[i][j] == 1){
+        il_y_a_encore_des_briques = true;
+        gb.display.fillRect(position_x_brique, position_y_brique, largeur_brique, hauteur_brique);
+      }
     }
+  }
+  if(! il_y_a_encore_des_briques){
+    gb.display.println("Bravo !");
+    gb.display.println();
+    gb.display.println("Appuyer sur A pour relancer");
+  } else {
+    // On affiche la balle et la raquette
+    gb.display.fillRect(balle_posX, balle_posY, taille_balle, taille_balle);
+    gb.display.fillRect(raquette_posX, raquette_posY, largeur_raquette, hauteur_raquette);
+  }
+}
+
+void nouvelle_partie(){
+  // Si on appuie sur A, on relance une nouvelle partie
+  // On remet toutes les briques, on replace la balle et la raquette
+  if(gb.buttons.repeat(BUTTON_A, 0)){
+    init_briques();
+    reinit_balle();
+    raquette_posX = gb.display.width() / 3;
   }
 }
 
@@ -131,6 +156,8 @@ void loop() {
   rebond_balle_raquette();
 
   sortie_balle();
+
+  nouvelle_partie();
 
   affichage();
 }
