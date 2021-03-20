@@ -13,6 +13,13 @@ const int hauteur_raquette = 3;
 const int raquette_posY = gb.display.height() - hauteur_raquette;
 int raquette_posX = gb.display.width() / 3;
 
+// Caractéristiques des briques
+const int nombre_briques = 8;
+const int largeur_brique = (gb.display.width() / nombre_briques) - 2;
+const int hauteur_brique = 3;
+const int position_y_ligne = 20;
+int ligne_briques[nombre_briques];
+
 // Nos fonctions
 void mise_a_jour_position_balle(){
   balle_posX = balle_posX + balle_speedX;
@@ -65,15 +72,28 @@ void sortie_balle(){
   }
 }
 
+void init_briques(){
+  for(int i = 0; i < nombre_briques; i++){
+    ligne_briques[i] = 1;
+  }
+}
+
 void affichage(){
   // On affiche la balle et la raquette
   gb.display.fillRect(balle_posX, balle_posY, taille_balle, taille_balle);
   gb.display.fillRect(raquette_posX, raquette_posY, largeur_raquette, hauteur_raquette);
+
+  // On affiche les briques
+  for(int i = 0; i < nombre_briques; i++){
+    int position_x_brique = i * (largeur_brique + 2);
+    gb.display.fillRect(position_x_brique, position_y_ligne, largeur_brique, hauteur_brique);
+  }
 }
 
 // Setup et loop
 void setup() {
   gb.begin();
+  init_briques();
 }
 
 void loop() {
