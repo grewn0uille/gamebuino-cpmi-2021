@@ -45,6 +45,12 @@ void rebond_balle_haut_gauche_droite(){
   }
 }
 
+void rebond_balle_raquette(){
+  if (gb.collide.rectRect(balle_posX, balle_posY, taille_balle, taille_balle, raquette_posX, raquette_posY, largeur_raquette, hauteur_raquette)){
+      balle_speedY = -1;
+  }
+}
+
 void reinit_balle(){
   balle_posX = gb.display.width() / 2;
   balle_posY = gb.display.height() - 20;
@@ -79,6 +85,8 @@ void loop() {
   deplacement_raquette();
 
   rebond_balle_haut_gauche_droite();
+
+  rebond_balle_raquette();
 
   sortie_balle();
 
