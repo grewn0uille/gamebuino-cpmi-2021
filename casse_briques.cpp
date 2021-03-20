@@ -30,6 +30,35 @@ void deplacement_raquette(){
   }
 }
 
+void rebond_balle_haut_gauche_droite(){
+  // Si la balle touche le haut de l’écran, on la fait aller vers le bas
+  if (balle_posY < 0){
+    balle_speedY = 1;
+  }
+  // Si la balle touche la gauche de l’écran, on la fait aller vers la droite
+  if (balle_posX < 0){
+    balle_speedX = 1;
+  }
+  // Si la balle touche la droite de l’écran, on la fait aller vers la gauche
+  if (balle_posX + taille_balle > gb.display.width()){
+    balle_speedX = -1;
+  }
+}
+
+void reinit_balle(){
+  balle_posX = gb.display.width() / 2;
+  balle_posY = gb.display.height() - 20;
+  balle_speedX = 1;
+  balle_speedY = -1;
+}
+
+void sortie_balle(){
+  // Si la balle sort de l’écran par le bas, on la remet à sa position de départ
+  if (balle_posY + taille_balle > gb.display.height()){
+    reinit_balle();
+  }
+}
+
 void affichage(){
   // On affiche la balle et la raquette
   gb.display.fillRect(balle_posX, balle_posY, taille_balle, taille_balle);
@@ -48,6 +77,10 @@ void loop() {
   mise_a_jour_position_balle();
 
   deplacement_raquette();
+
+  rebond_balle_haut_gauche_droite();
+
+  sortie_balle();
 
   affichage();
 }
