@@ -58,6 +58,23 @@ void rebond_balle_raquette(){
   }
 }
 
+void rebond_balle_briques(){
+  for(int i = 0; i < nombre_briques; i++){
+    // On calcule la position X de la brique
+    int position_x_brique = i * (largeur_brique + 2);
+    if (ligne_briques[i] == 1){
+      // Si la balle touche une brique, on met la brique à 0 et on change la direction Y de la balle
+      if (gb.collide.rectRect(balle_posX, balle_posY, taille_balle, taille_balle, position_x_brique, position_y_ligne, largeur_brique, hauteur_brique)){
+        ligne_briques[i] = 0;
+        // On met - balle_speedY
+        // comme ça si on touche la brique en descente, la balle repart vers le haut
+        // si on touche la brique en montant, la balle repart vers le bas
+        balle_speedY = -balle_speedY;
+      }
+    }
+  }
+}
+
 void reinit_balle(){
   balle_posX = gb.display.width() / 2;
   balle_posY = gb.display.height() - 20;
@@ -86,7 +103,10 @@ void affichage(){
   // On affiche les briques
   for(int i = 0; i < nombre_briques; i++){
     int position_x_brique = i * (largeur_brique + 2);
-    gb.display.fillRect(position_x_brique, position_y_ligne, largeur_brique, hauteur_brique);
+    // On affiche que les briques que l’on n’a pas touché. 1 = brique intacte, 0 = brique touchée
+    if (ligne_briques[i] == 1){
+      gb.display.fillRect(position_x_brique, position_y_ligne, largeur_brique, hauteur_brique);
+    }
   }
 }
 
@@ -105,6 +125,8 @@ void loop() {
   deplacement_raquette();
 
   rebond_balle_haut_gauche_droite();
+
+  rebond_balle_briques();
 
   rebond_balle_raquette();
 
